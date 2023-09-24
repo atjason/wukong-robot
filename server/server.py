@@ -193,10 +193,10 @@ class ChatHandler(BaseHandler):
                         data, resp_uuid)
 
                 )
-
             elif self.get_argument("type") == "start":
                 res = {"code": 0, "message": "ok"}
                 self.write(json.dumps(res))
+                self.finish()
                 isFinished = True
 
                 wukong._detected_callback(False)

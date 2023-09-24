@@ -166,9 +166,14 @@ class Conversation(object):
             self.player2.turnDown()
             self.say("好的", cache=True)
             return
+        elif "再见" in query:
+            self.player.play(constants.getData("beep_lo.wav"))
+            return
  
+        self.player.play(constants.getData("wait.wav"))
         stream = self.ai.stream_chat(query)
         self.stream_say(stream, True, onCompleted=self.checkRestore)
+        self.player.play(constants.getData("beep_lo.wav"))
         return
 
         parsed = self.doParse(query)

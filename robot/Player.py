@@ -257,12 +257,12 @@ class MusicPlayer(SoxPlayer):
             if res.stdout != "" and res.stdout.strip().endswith("%"):
                 volume = int(res.stdout.strip().replace("%", ""))
                 volume += 10
-                if volume >= 100:
-                    volume = 100
+                if volume >= 80:
+                    volume = 80
                     self.plugin.say("音量已经最大啦")
                 subprocess.run(["amixer", "set", "PCM", f"{volume}%", "-c", "Y05"])
             else:
-                subprocess.run(["amixer", "set", "PCM", "20%+", "-c", "Y05"])
+                subprocess.run(["amixer", "set", "PCM", "10%+", "-c", "Y05"])
         else:
             self.plugin.say("当前系统不支持调节音量")
         self.resume()
@@ -277,7 +277,7 @@ class MusicPlayer(SoxPlayer):
                 universal_newlines=True,
             )
             volume = int(res.stdout.strip())
-            volume -= 20
+            volume -= 10
             if volume <= 20:
                 volume = 20
                 self.plugin.say("音量已经很小啦")
@@ -292,7 +292,7 @@ class MusicPlayer(SoxPlayer):
             )
             if res.stdout != "" and res.stdout.strip().endswith("%"):
                 volume = int(res.stdout.replace("%", "").strip())
-                volume -= 20
+                volume -= 10
                 if volume <= 20:
                     volume = 20
                     self.plugin.say("音量已经最小啦")
@@ -300,7 +300,7 @@ class MusicPlayer(SoxPlayer):
                 subprocess.run(["amixer", "set", "PCM", f"{volume}%", "-c", "Y05"])
             else:
                 #subprocess.run(["amixer", "set", "Master", "20%-"])
-                subprocess.run(["amixer", "set", "PCM", "20%-", "-c", "Y05"])
+                subprocess.run(["amixer", "set", "PCM", "10%-", "-c", "Y05"])
         else:
             self.plugin.say("当前系统不支持调节音量")
         self.resume()
