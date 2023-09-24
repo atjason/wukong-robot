@@ -241,27 +241,28 @@ class MusicPlayer(SoxPlayer):
                 universal_newlines=True,
             )
             volume = int(res.stdout.strip())
-            volume += 20
-            if volume >= 100:
-                volume = 100
+            volume += 10
+            if volume >= 80:
+                volume = 80
                 self.plugin.say("音量已经最大啦")
             subprocess.run(["osascript", "-e", f"set volume output volume {volume}"])
         elif system == "Linux":
             res = subprocess.run(
-                ["amixer sget Master | grep 'Mono:' | awk -F'[][]' '{ print $2 }'"],
+                #["amixer sget Master | grep 'Mono:' | awk -F'[][]' '{ print $2 }'"],
+                ["amixer -c Y05 sget PCM | tail -n 1 | awk -F'[][]' '{ print $2 }'"],
                 shell=True,
                 capture_output=True,
                 universal_newlines=True,
             )
             if res.stdout != "" and res.stdout.strip().endswith("%"):
                 volume = int(res.stdout.strip().replace("%", ""))
-                volume += 20
+                volume += 10
                 if volume >= 100:
                     volume = 100
                     self.plugin.say("音量已经最大啦")
-                subprocess.run(["amixer", "set", "Master", f"{volume}%"])
+                subprocess.run(["amixer", "set", "PCM", f"{volume}%", "-c", "Y05"])
             else:
-                subprocess.run(["amixer", "set", "Master", "20%+"])
+                subprocess.run(["amixer", "set", "PCM", "20%+", "-c", "Y05"])
         else:
             self.plugin.say("当前系统不支持调节音量")
         self.resume()
@@ -283,20 +284,23 @@ class MusicPlayer(SoxPlayer):
             subprocess.run(["osascript", "-e", f"set volume output volume {volume}"])
         elif system == "Linux":
             res = subprocess.run(
-                ["amixer sget Master | grep 'Mono:' | awk -F'[][]' '{ print $2 }'"],
+                #["amixer sget Master | grep 'Mono:' | awk -F'[][]' '{ print $2 }'"],
+                ["amixer -c Y05 sget PCM | tail -n 1 | awk -F'[][]' '{ print $2 }'"],
                 shell=True,
                 capture_output=True,
                 universal_newlines=True,
             )
-            if res.stdout != "" and res.stdout.endswith("%"):
+            if res.stdout != "" and res.stdout.strip().endswith("%"):
                 volume = int(res.stdout.replace("%", "").strip())
                 volume -= 20
                 if volume <= 20:
                     volume = 20
                     self.plugin.say("音量已经最小啦")
-                subprocess.run(["amixer", "set", "Master", f"{volume}%"])
+                #subprocess.run(["amixer", "set", "Master", f"{volume}%"])
+                subprocess.run(["amixer", "set", "PCM", f"{volume}%", "-c", "Y05"])
             else:
-                subprocess.run(["amixer", "set", "Master", "20%-"])
+                #subprocess.run(["amixer", "set", "Master", "20%-"])
+                subprocess.run(["amixer", "set", "PCM", "20%-", "-c", "Y05"])
         else:
             self.plugin.say("当前系统不支持调节音量")
         self.resume()

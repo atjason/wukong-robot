@@ -27,6 +27,7 @@ def initDetector(wukong):
         if keyword_paths:
             porcupine = pvporcupine.create(
                 access_key=access_key,
+                #model_path="/home/jason/audio/wukong-robot/static/porcupine_params_zh.pv",
                 keyword_paths=[constants.getConfigData(kw) for kw in keyword_paths],
                 sensitivities=[config.get("sensitivity", 0.5)] * len(keyword_paths),
             )

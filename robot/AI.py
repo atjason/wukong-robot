@@ -241,11 +241,15 @@ class OPENAIRobot(AbstractRobot):
         header = {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + self.openai.api_key,
+            "api-key": self.openai.api_key,
         }
 
         data = {"model": "gpt-3.5-turbo", "messages": self.context, "stream": True}
         logger.info("开始流式请求")
-        url = self.api_base + "/completions"
+        url = self.api_base
+        if url.endswith("api.openai.com/v1/chat"):
+            url = self.api_base + "/completions"
+
         # 请求接收流式数据
         try:
             response = requests.request(
@@ -255,6 +259,7 @@ class OPENAIRobot(AbstractRobot):
                 json=data,
                 stream=True,
                 proxies={"https": self.openai.proxy},
+                verify=False,
             )
 
             def generate():

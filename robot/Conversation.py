@@ -50,6 +50,7 @@ class Conversation(object):
         self.onStream = None
         self.hasPardon = False
         self.player = Player.SoxPlayer()
+        self.player2 = Player.MusicPlayer([], self)
         self.lifeCycleHandler = LifeCycleHandler(self)
         self.tts_count = 0
         self.tts_index = 0
@@ -156,6 +157,19 @@ class Conversation(object):
             return
 
         lastImmersiveMode = self.immersiveMode
+
+        if "大点声" in query:
+            self.player2.turnUp()
+            self.say("好的", cache=True)
+            return
+        elif "小点声" in query:
+            self.player2.turnDown()
+            self.say("好的", cache=True)
+            return
+ 
+        stream = self.ai.stream_chat(query)
+        self.stream_say(stream, True, onCompleted=self.checkRestore)
+        return
 
         parsed = self.doParse(query)
         if self._InGossip(query) or not self.brain.query(query, parsed):
