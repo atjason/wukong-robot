@@ -159,6 +159,7 @@ class ChatHandler(BaseHandler):
 
     def post(self):
         global conversation
+        isFinished = False
         if self.validate(self.get_argument("validate", default=None)):
             if self.get_argument("type") == "text":
                 query = self.get_argument("query")
@@ -196,19 +197,22 @@ class ChatHandler(BaseHandler):
             elif self.get_argument("type") == "start":
                 res = {"code": 0, "message": "ok"}
                 self.write(json.dumps(res))
+                isFinished = True
 
                 wukong._detected_callback(False)
                 wukong.conversation.interrupt()
                 query = wukong.conversation.activeListen()
                 wukong.conversation.doResponse(query)
-                
+
             else:
                 res = {"code": 1, "message": "illegal type"}
                 self.write(json.dumps(res))
         else:
             res = {"code": 1, "message": "illegal visit"}
             self.write(json.dumps(res))
-        self.finish()
+            
+        if not isFinished:
+            self.finish()
 
 
 class GetHistoryHandler(BaseHandler):
