@@ -192,6 +192,16 @@ class ChatHandler(BaseHandler):
                         data, resp_uuid)
 
                 )
+
+            elif self.get_argument("type") == "start":
+                res = {"code": 0, "message": "ok"}
+                self.write(json.dumps(res))
+
+                wukong._detected_callback(False)
+                wukong.conversation.interrupt()
+                query = wukong.conversation.activeListen()
+                wukong.conversation.doResponse(query)
+                
             else:
                 res = {"code": 1, "message": "illegal type"}
                 self.write(json.dumps(res))
