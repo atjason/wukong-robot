@@ -20,4 +20,3 @@ apscheduler
 asyncio
 edge-tts
 nest_asyncio
-funasr_onnx

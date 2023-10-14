@@ -190,5 +190,8 @@ if __name__ == "__main__":
     elif "-h" in (sys.argv):
         wukong = Wukong()
         wukong.help()
+    elif "-d" in (sys.argv):
+        wukong = Wukong()
+        wukong.debug()
     else:
         fire.Fire(Wukong)
